@@ -1,0 +1,1794 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CommandTab</name>
+    </assembly>
+    <members>
+        <member name="T:CommandTab.CreateLevel">
+            <summary>
+            Create Multiple Levels with given elevation
+            </summary>
+        </member>
+        <member name="M:CommandTab.CreateLevel.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.CreateLevel.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.App">
+            <summary>
+            Implement Revit External Application Interface
+            </summary>
+        </member>
+        <member name="F:CommandTab.App.thisApp">
+            <summary>
+            Class instance
+            </summary>
+        </member>
+        <member name="F:CommandTab.App.m_DoorControlForm">
+            <summary>
+            Door Control Modeless Form Instance
+            </summary>
+        </member>
+        <member name="F:CommandTab.App.m_rotatingForm">
+            <summary>
+            Rotate Multiple Elements Modeless Form Instance
+            </summary>
+        </member>
+        <member name="F:CommandTab.App.m_SymbolSelection">
+             <summary>
+            Beam Symbol Selection Modeless Form Instance
+             </summary>
+        </member>
+        <member name="F:CommandTab.App.m_structuralConnectionSelector">
+            <summary>
+            Structural Connection Type Selector Modeless Form Instance
+            </summary>
+        </member>
+        <member name="M:CommandTab.App.OnStartup(Autodesk.Revit.UI.UIControlledApplication)">
+            <summary>
+            Execute the command when REVIT starts
+            </summary>
+            <param name="a">Access the control of user interface application</param>
+            <returns></returns>
+        </member>
+        <member name="M:CommandTab.App.OnShutdown(Autodesk.Revit.UI.UIControlledApplication)">
+            <summary>
+            Execute the command when REVIT shut down
+            </summary>
+            <param name="a"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CommandTab.App.ShowForm_DoorControlForm(Autodesk.Revit.UI.UIApplication)">
+            <summary>
+              This method creates and shows a modeless dialog, unless it already exists.
+            </summary>
+            <remarks>
+              The external command invokes this on the end-user's request
+            </remarks>
+            
+        </member>
+        <member name="M:CommandTab.App.ShowForm_RotatingForm(Autodesk.Revit.UI.UIApplication)">
+            <summary>
+              This method creates and shows a modeless dialog, unless it already exists.
+            </summary>
+            <remarks>
+              The external command invokes this on the end-user's request
+            </remarks>
+            
+        </member>
+        <member name="M:CommandTab.App.ShowForm_SymbolSelection(Autodesk.Revit.UI.UIApplication)">
+            <summary>
+              This method creates and shows a modeless dialog, unless it already exists.
+            </summary>
+            <remarks>
+              The external command invokes this on the end-user's request
+            </remarks>
+            
+        </member>
+        <member name="M:CommandTab.App.ShowForm_StructuralConnectionSelector(Autodesk.Revit.UI.UIApplication)">
+            <summary>
+              This method creates and shows a modeless dialog, unless it already exists.
+            </summary>
+            <remarks>
+              The external command invokes this on the end-user's request
+            </remarks>
+            
+        </member>
+        <member name="M:CommandTab.App.WakeFormUp_DoorControlForm">
+            <summary>
+              Waking up the dialog from its waiting state.
+            </summary>
+        </member>
+        <member name="M:CommandTab.App.WakeFormUp_RotatingForm">
+            <summary>
+              Waking up the dialog from its waiting state.
+            </summary>
+        </member>
+        <member name="M:CommandTab.App.WakeFormUp_SymbolSelectionForm">
+            <summary>
+              Waking up the dialog from its waiting state.
+            </summary>
+        </member>
+        <member name="M:CommandTab.App.WakeFormUp_StructuralConnectionSelector">
+            <summary>
+              Waking up the dialog from its waiting state.
+            </summary>
+        </member>
+        <member name="F:CommandTab.App.angleX">
+            <summary>
+            Store the X angle value from modeless form
+            </summary>
+        </member>
+        <member name="F:CommandTab.App.angleY">
+            <summary>
+            Store the X angle value from modeless form
+            </summary>
+        </member>
+        <member name="F:CommandTab.App.angleZ">
+            <summary>
+            Store the X angle value from modeless form
+            </summary>
+        </member>
+        <member name="P:CommandTab.App.beamTypeSelection">
+            <summary>
+            Gets combobox selection from symbol selection form
+            </summary>
+        </member>
+        <member name="P:CommandTab.App.beamMaps">
+            <summary>
+            Store the beam symbols in the document
+            </summary>
+        </member>
+        <member name="P:CommandTab.App.structuralConnectionMap">
+            <summary>
+            Store the connection types in the document
+            </summary>
+        </member>
+        <member name="P:CommandTab.App.connectionTypeSelection">
+            <summary>
+            Gets combobox selection from symbol selection form
+            </summary>
+        </member>
+        <member name="P:CommandTab.App.structuralConnectionMapSteel">
+            <summary>
+            Store the connection types in the document
+            </summary>
+        </member>
+        <member name="P:CommandTab.App.connectionTypeSelectionSteel">
+            <summary>
+            Gets combobox selection from symbol selection form
+            </summary>
+        </member>
+        <member name="T:CommandTab.CopeConnectedBeams">
+            <summary>
+            Copes the elements that intersects with input element
+            </summary>
+        </member>
+        <member name="M:CommandTab.CopeConnectedBeams.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.CopeConnectedBeams.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.RemoveAllCopings">
+            <summary>
+            Remove all structural copings from selected elements
+            </summary>
+        </member>
+        <member name="M:CommandTab.RemoveAllCopings.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.RemoveAllCopings.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.CreateBeamCommand">
+            <summary>
+            Create beam between selected columns
+            </summary>
+        </member>
+        <member name="M:CommandTab.CreateBeamCommand.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.CreateBeamCommand.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.CreateBeamExternalEventHandler">
+            <summary>
+            Create Beam Between Columns External Event Handler
+            </summary>
+        </member>
+        <member name="M:CommandTab.CreateBeamExternalEventHandler.Execute(Autodesk.Revit.UI.UIApplication)">
+            <summary>
+              The top method of the event handler.
+            </summary>
+            <remarks>
+              This is called by Revit after the corresponding
+              external event was raised (by the modeless form)
+              and Revit reached the time at which it could call
+              the event's handler (i.e. this object)
+            </remarks>
+            <param name="app">Revit User Interface Application</param>
+        </member>
+        <member name="M:CommandTab.CreateBeamExternalEventHandler.GetName">
+            <summary>
+              A method to identify this External Event Handler
+            </summary>
+        </member>
+        <member name="M:CommandTab.CreateBeamExternalEventHandler.CreateBeamMethod(Autodesk.Revit.DB.Document,Autodesk.Revit.DB.View,System.Collections.Generic.ICollection{Autodesk.Revit.DB.ElementId},CommandTab.SymbolSelectionForm)">
+            <summary>
+            Create Beam(s) Between The Selected Structural Columns
+            </summary>
+            <param name="doc">Active Revit Document</param>
+            <param name="refList">Selected Elements Id list</param>
+            <param name="symbolSelectionForm">Symbol Selection Form</param>
+            <param name="view">Active Revit View</param>
+        </member>
+        <member name="M:CommandTab.CreateBeamExternalEventHandler.CreateLine(System.Int32,System.Collections.Generic.IList{Autodesk.Revit.DB.XYZ})">
+            <summary>
+            Beam Location Line Creation Method
+            </summary>
+            <param name="range">Selected Column Number</param>
+            <param name="m_points">Collection of structural column location points</param>
+            <returns>Collection of beam location line</returns>
+        </member>
+        <member name="M:CommandTab.CreateBeamExternalEventHandler.beamSymbols(Autodesk.Revit.DB.Document,System.Collections.ArrayList)">
+            <summary>
+            Add beam family symbols to the array list for initialize to the form
+            </summary>
+            <param name="doc">Active Revit Document</param>
+            <param name="beamMap">Want to initalize the beam symbol array list</param>
+        </member>
+        <member name="T:CommandTab.CreateBeamExternalEventHandler.SymbolMap">
+            <summary>
+            assistant class contains the symbol and its name.
+            </summary>
+        </member>
+        <member name="M:CommandTab.CreateBeamExternalEventHandler.SymbolMap.#ctor">
+            <summary>
+            constructor without parameter is forbidden
+            </summary>
+        </member>
+        <member name="M:CommandTab.CreateBeamExternalEventHandler.SymbolMap.#ctor(Autodesk.Revit.DB.FamilySymbol)">
+            <summary>
+            constructor
+            </summary>
+            <param name="symbol">family symbol</param>
+        </member>
+        <member name="P:CommandTab.CreateBeamExternalEventHandler.SymbolMap.SymbolName">
+            <summary>
+            SymbolName property
+            </summary>
+        </member>
+        <member name="P:CommandTab.CreateBeamExternalEventHandler.SymbolMap.ElementType">
+            <summary>
+            ElementType property
+            </summary>
+        </member>
+        <member name="T:CommandTab.SymbolSelectionForm">
+            <summary>
+            Beam Symbol Type Selection Form
+            </summary>
+        </member>
+        <member name="M:CommandTab.SymbolSelectionForm.#ctor(Autodesk.Revit.UI.ExternalEvent,CommandTab.CreateBeamExternalEventHandler,Autodesk.Revit.DB.Document)">
+            <summary>
+            Symbol Selection Form Class Instance and Initializer
+            </summary>
+            <param name="exEvent">External event which implemented when raise calling</param>
+            <param name="handler">Revit API Externl Event Handler</param>
+            <param name="m_doc">Active Revit Document</param>
+        </member>
+        <member name="M:CommandTab.SymbolSelectionForm.OnFormClosed(System.Windows.Forms.FormClosedEventArgs)">
+            <summary>
+            Form closed event handler
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:CommandTab.SymbolSelectionForm.EnableCommands(System.Boolean)">
+             <summary>
+               Control enabler / disabler 
+             </summary>
+            
+        </member>
+        <member name="M:CommandTab.SymbolSelectionForm.DozeOff">
+            <summary>
+              DozeOff -> disable all controls (but the Exit button)
+            </summary>
+            
+        </member>
+        <member name="M:CommandTab.SymbolSelectionForm.WakeUp">
+            <summary>
+              WakeUp -> enable all controls
+            </summary>
+            
+        </member>
+        <member name="F:CommandTab.SymbolSelectionForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CommandTab.SymbolSelectionForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:CommandTab.SymbolSelectionForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CommandTab.DoorControlCommand">
+            <summary>
+            Door control command class
+            </summary>
+        </member>
+        <member name="M:CommandTab.DoorControlCommand.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.DoorControlCommand.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.ModelessForm">
+            <summary>
+            Door Control Modeless Form
+            </summary>
+        </member>
+        <member name="M:CommandTab.ModelessForm.#ctor(Autodesk.Revit.UI.ExternalEvent,CommandTab.RequestHandler)">
+            <summary>
+            Door Control Modeless Form Instance and Initializer
+            </summary>
+            <param name="exEvent">External Event for modeless form implemantion</param>
+            <param name="handler">External Event Handler Class</param>
+        </member>
+        <member name="M:CommandTab.ModelessForm.OnFormClosed(System.Windows.Forms.FormClosedEventArgs)">
+            <summary>
+            Form closed event handler
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:CommandTab.ModelessForm.EnableCommands(System.Boolean)">
+             <summary>
+               Control enabler / disabler 
+             </summary>
+            
+        </member>
+        <member name="M:CommandTab.ModelessForm.MakeRequest(CommandTab.RequestId)">
+             <summary>
+               A private helper method to make a request
+               and put the dialog to sleep at the same time.
+             </summary>
+             <remarks>
+               It is expected that the process which executes the request 
+               (the Idling helper in this particular case) will also
+               wake the dialog up after finishing the execution.
+             </remarks>
+            
+        </member>
+        <member name="M:CommandTab.ModelessForm.DozeOff">
+            <summary>
+              DozeOff -> disable all controls (but the Exit button)
+            </summary>
+            
+        </member>
+        <member name="M:CommandTab.ModelessForm.WakeUp">
+            <summary>
+              WakeUp -> enable all controls
+            </summary>
+            
+        </member>
+        <member name="F:CommandTab.ModelessForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CommandTab.ModelessForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:CommandTab.ModelessForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CommandTab.RequestId">
+            <summary>
+              A list of requests the dialog has available
+            </summary>
+            
+        </member>
+        <member name="F:CommandTab.RequestId.None">
+            <summary>
+            None
+            </summary>
+        </member>
+        <member name="F:CommandTab.RequestId.Delete">
+            <summary>
+            "Delete" request
+            </summary>
+        </member>
+        <member name="F:CommandTab.RequestId.FlipLeftRight">
+            <summary>
+            "FlipLeftRight" request
+            </summary>
+        </member>
+        <member name="F:CommandTab.RequestId.FlipInOut">
+            <summary>
+            "FlipInOut" request
+            </summary>
+        </member>
+        <member name="F:CommandTab.RequestId.MakeRight">
+            <summary>
+            "MakeRight" request
+            </summary>
+        </member>
+        <member name="F:CommandTab.RequestId.MakeLeft">
+            <summary>
+            "MakeLeft" request
+            </summary>
+        </member>
+        <member name="F:CommandTab.RequestId.TurnOut">
+            <summary>
+            "TurnOut" request
+            </summary>
+        </member>
+        <member name="F:CommandTab.RequestId.TurnIn">
+            <summary>
+            "TurnIn" request
+            </summary>
+        </member>
+        <member name="F:CommandTab.RequestId.Rotate">
+            <summary>
+            "Rotate" request
+            </summary>
+        </member>
+        <member name="T:CommandTab.Request">
+            <summary>
+              A class around a variable holding the current request.
+            </summary>
+            <remarks>
+              Access to it is made thread-safe, even though we don't necessarily
+              need it if we always disable the dialog between individual requests.
+            </remarks>
+            
+        </member>
+        <member name="M:CommandTab.Request.Take">
+            <summary>
+              Take - The Idling handler calls this to obtain the latest request. 
+            </summary>
+            <remarks>
+              This is not a getter! It takes the request and replaces it
+              with 'None' to indicate that the request has been "passed on".
+            </remarks>
+            
+        </member>
+        <member name="M:CommandTab.Request.Make(CommandTab.RequestId)">
+            <summary>
+              Make - The Dialog calls this when the user presses a command button there. 
+            </summary>
+            <remarks>
+              It replaces any older request previously made.
+            </remarks>
+            
+        </member>
+        <member name="T:CommandTab.RequestHandler">
+            <summary>
+              A class with methods to execute requests made by the dialog user.
+            </summary>
+            
+        </member>
+        <member name="P:CommandTab.RequestHandler.Request">
+            <summary>
+            A public property to access the current request value
+            </summary>
+        </member>
+        <member name="M:CommandTab.RequestHandler.GetName">
+            <summary>
+              A method to identify this External Event Handler
+            </summary>
+        </member>
+        <member name="M:CommandTab.RequestHandler.Execute(Autodesk.Revit.UI.UIApplication)">
+            <summary>
+              The top method of the event handler.
+            </summary>
+            <remarks>
+              This is called by Revit after the corresponding
+              external event was raised (by the modeless form)
+              and Revit reached the time at which it could call
+              the event's handler (i.e. this object)
+            </remarks>
+            
+        </member>
+        <member name="M:CommandTab.RequestHandler.ModifySelectedDoors(Autodesk.Revit.UI.UIApplication,System.String,CommandTab.RequestHandler.DoorOperation)">
+            <summary>
+              The main door-modification subroutine - called from every request 
+            </summary>
+            <remarks>
+              It searches the current selection for all doors
+              and if it finds any it applies the requested operation to them
+            </remarks>
+            <param name="uiapp">The Revit application object</param>
+            <param name="text">Caption of the transaction for the operation.</param>
+            <param name="operation">A delegate to perform the operation on an instance of a door.</param>
+            
+        </member>
+        <member name="T:CommandTab.AddField">
+            <summary>
+            Sample Class
+            </summary>
+        </member>
+        <member name="M:CommandTab.AddField.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.AddField.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.CreateWallGrid">
+            <summary>
+            Create grid inside of wall location line
+            </summary>
+        </member>
+        <member name="M:CommandTab.CreateWallGrid.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.CreateWallGrid.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.CopeBeamConnectedToStrColumn">
+            <summary>
+            Cope beams connected to structural column
+            </summary>
+        </member>
+        <member name="M:CommandTab.CopeBeamConnectedToStrColumn.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.CopeBeamConnectedToStrColumn.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.CopeSelectedWIntersects">
+            <summary>
+            Copes the input element with intersects
+            </summary>
+        </member>
+        <member name="M:CommandTab.CopeSelectedWIntersects.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.CopeSelectedWIntersects.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.CopeIntersectedBeams">
+            <summary>
+            Copes the elements that intersects with input element
+            </summary>
+        </member>
+        <member name="M:CommandTab.CopeIntersectedBeams.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.CopeIntersectedBeams.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.GeometryHelper">
+            <summary>
+            Geometry helper class for multiple coping external command
+            </summary>
+        </member>
+        <member name="F:CommandTab.GeometryHelper.getCopeDistance">
+            <summary>
+            Gets the cope distance from windows user form input
+            </summary>
+        </member>
+        <member name="M:CommandTab.GeometryHelper.GetFramingElement(Autodesk.Revit.DB.Document,Autodesk.Revit.UI.UIDocument)">
+            <summary>
+            Select a structural framing element
+            </summary>
+            <param name="doc">Revit Document</param>
+            <param name="uidoc">Active User Interface Document</param>
+            <returns>Selected element</returns>
+        </member>
+        <member name="M:CommandTab.GeometryHelper.GetStructuralColumnElement(Autodesk.Revit.DB.Document,Autodesk.Revit.UI.UIDocument)">
+            <summary>
+            Select structural column
+            </summary>
+            <param name="doc">Revit Document</param>
+            <param name="uidoc">Active User Interface Document</param>
+            <returns>Selected element</returns>
+        </member>
+        <member name="M:CommandTab.GeometryHelper.GetSolidIntersects(Autodesk.Revit.DB.Document,Autodesk.Revit.DB.View,Autodesk.Revit.DB.Element)">
+            <summary>
+            Gets the element which intersects with input element
+            </summary>
+            <param name="doc">Revit Document</param>
+            <param name="activeView">Active View</param>
+            <param name="element">Input element for solid intersect</param>
+            <returns>List of elements that intersects with input element</returns>
+        </member>
+        <member name="M:CommandTab.GeometryHelper.GetBouindingBoxIntersect(Autodesk.Revit.DB.Document,Autodesk.Revit.DB.View,Autodesk.Revit.DB.Element)">
+            <summary>
+            Gets the elements which intersects with input element
+            </summary>
+            <param name="doc">Acitve Revit Document</param>
+            <param name="activeView">Active View</param>
+            <param name="element">Input element for bounding box</param>
+            <returns>List of elements that intersects with input element</returns>
+        </member>
+        <member name="M:CommandTab.GeometryHelper.GetIntersectsStructuralColumn(Autodesk.Revit.DB.Document,Autodesk.Revit.DB.View,Autodesk.Revit.DB.Element)">
+            <summary>
+            Gets the framing elements which intersects with input structural column
+            </summary>
+            <param name="doc">Acitve Revit Document</param>
+            <param name="activeView">Active View</param>
+            <param name="element">Input element for bounding box</param>
+            <returns></returns>
+        </member>
+        <member name="M:CommandTab.GeometryHelper.CopeIntersects(Autodesk.Revit.DB.Document,System.Collections.Generic.IList{Autodesk.Revit.DB.Element},Autodesk.Revit.DB.Element,System.Boolean)">
+            <summary>
+            Cope the intersected elements that intersect with cutter element
+            </summary>
+            <param name="doc">Revit Document</param>
+            <param name="intersects">Elements that intersects with input element(cutter)</param>
+            <param name="cutter">Cutter, selected input element</param>
+            <param name="reverse">Set true if wants to cut the intersects</param>
+        </member>
+        <member name="M:CommandTab.GeometryHelper.GetGeometry(Autodesk.Revit.DB.GeometryElement)">
+            <summary>
+            Return the solid geometry of an element.  
+            </summary>
+            <remarks>Makes an assumption that each element consists of only one 
+            positive-volume solid, and returns the first one it finds.</remarks>
+        </member>
+        <member name="M:CommandTab.GeometryHelper.FeetToMilimeter(System.Double)">
+            <summary>
+            Convert feet unit to milimetric unit
+            </summary>
+            <param name="input">Desired to be converted value</param>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.StructuralFramingSelectionFilter">
+            <summary>
+            Selection filter for structural framing
+            </summary>
+        </member>
+        <member name="M:CommandTab.StructuralFramingSelectionFilter.AllowElement(Autodesk.Revit.DB.Element)">
+            <summary>
+            Allow selection of elements
+            </summary>
+            <param name="e">Selected Elements</param>
+            <returns></returns>
+        </member>
+        <member name="M:CommandTab.StructuralFramingSelectionFilter.AllowReference(Autodesk.Revit.DB.Reference,Autodesk.Revit.DB.XYZ)">
+            <summary>
+            Doesn't allow selection of references
+            </summary>
+            <param name="reference"></param>
+            <param name="position"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.StructuralColumnSelectionFilter">
+            <summary>
+            Selection filter for structural columns
+            </summary>
+        </member>
+        <member name="M:CommandTab.StructuralColumnSelectionFilter.AllowElement(Autodesk.Revit.DB.Element)">
+            <summary>
+            Allow Selection of Elements
+            </summary>
+            <param name="e">Selected Elements</param>
+            <returns></returns>
+        </member>
+        <member name="M:CommandTab.StructuralColumnSelectionFilter.AllowReference(Autodesk.Revit.DB.Reference,Autodesk.Revit.DB.XYZ)">
+            <summary>
+            Allow Selection of References
+            </summary>
+            <param name="reference">Selected Reference</param>
+            <param name="position">Selected Point</param>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.CopeIntersected">
+            <summary>
+            Multiple framing coping external command class
+            </summary>
+        </member>
+        <member name="M:CommandTab.CopeIntersected.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.CopeIntersected.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.StructuralConnectionControl">
+            <summary>
+            Structural Connection Cope Distance Form
+            </summary>
+        </member>
+        <member name="M:CommandTab.StructuralConnectionControl.#ctor">
+            <summary>
+            Instance and initializer of this class
+            </summary>
+        </member>
+        <member name="M:CommandTab.StructuralConnectionControl.GetCopeDistance">
+            <summary>
+            Gets the cope distance from text box input
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:CommandTab.StructuralConnectionControl.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CommandTab.StructuralConnectionControl.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:CommandTab.StructuralConnectionControl.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CommandTab.CreateLevelForm">
+            <summary>
+            Create Multiple Level User Form
+            </summary>
+        </member>
+        <member name="M:CommandTab.CreateLevelForm.getLevelCount">
+            <summary>
+            Gets the level count from text box input
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CommandTab.CreateLevelForm.getLevelOffset">
+            <summary>
+            Gets the level offset distance from text box input
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CommandTab.CreateLevelForm.getCheckBox">
+            <summary>
+            Gets the check box result for creation of first level
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:CommandTab.CreateLevelForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CommandTab.CreateLevelForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:CommandTab.CreateLevelForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CommandTab.SetELevation">
+            <summary>
+            Sample Class
+            </summary>
+        </member>
+        <member name="M:CommandTab.SetELevation.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.SetELevation.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.OverrideCommand">
+            <summary>
+            Graphic override external command
+            </summary>
+        </member>
+        <member name="M:CommandTab.OverrideCommand.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.OverrideCommand.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.RotateMultiCommand">
+            <summary>
+            Door control command class
+            </summary>
+        </member>
+        <member name="M:CommandTab.RotateMultiCommand.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.RotateMultiCommand.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.RotateMultiExternalEvent">
+            <summary>
+            Rotate Multiple Element External Event Class
+            </summary>
+        </member>
+        <member name="M:CommandTab.RotateMultiExternalEvent.GetName">
+            <summary>
+              A method to identify this External Event Handler
+            </summary>
+        </member>
+        <member name="M:CommandTab.RotateMultiExternalEvent.Execute(Autodesk.Revit.UI.UIApplication)">
+            <summary>
+              The top method of the event handler.
+            </summary>
+            <remarks>
+              This is called by Revit after the corresponding
+              external event was raised (by the modeless form)
+              and Revit reached the time at which it could call
+              the event's handler (i.e. this object)
+            </remarks>
+            
+        </member>
+        <member name="M:CommandTab.RotateMultiExternalEvent.RotateMethod(Autodesk.Revit.DB.Document,System.Collections.Generic.ICollection{Autodesk.Revit.DB.ElementId},System.Double,System.Double,System.Double)">
+            <summary>
+            Rotate Multiple Elements its own axis
+            </summary>
+            <param name="doc">Active Revit Document</param>
+            <param name="ids">Collection of selected element IDs</param>
+            <param name="angleX">Rotation angle of X axis</param>
+            <param name="angleY">Rotation angle of Y axis</param>
+            <param name="angleZ">Rotation angle of Z axis</param>
+        </member>
+        <member name="M:CommandTab.RotateMultiExternalEvent.DegreeToRadian(System.Double)">
+            <summary>
+            Convert input degree to radian.
+            </summary>
+            <param name="angle">Value wants the convert to the radian</param>
+            <returns>Return the angle degree as a radian</returns>
+        </member>
+        <member name="T:CommandTab.Rotating_Form">
+            <summary>
+            Rotate Element Form
+            </summary>
+        </member>
+        <member name="M:CommandTab.Rotating_Form.#ctor(Autodesk.Revit.UI.ExternalEvent,CommandTab.RotateMultiExternalEvent)">
+            <summary>
+            Rotating form constructor
+            </summary>
+            <param name="exEvent">External event which implemented when raise calling</param>
+            <param name="handler">Revit API Externl Event Handler</param>
+        </member>
+        <member name="M:CommandTab.Rotating_Form.Rotating_Form_Load(System.Object,System.EventArgs)">
+            <summary>
+            Process while loading the form
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">Event which will happen when button clicked</param>
+        </member>
+        <member name="M:CommandTab.Rotating_Form.OnFormClosed(System.Windows.Forms.FormClosedEventArgs)">
+            <summary>
+            Form closed event handler
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:CommandTab.Rotating_Form.EnableCommands(System.Boolean)">
+             <summary>
+               Control enabler / disabler 
+             </summary>
+            
+        </member>
+        <member name="M:CommandTab.Rotating_Form.DozeOff">
+            <summary>
+              DozeOff -> disable all controls (but the Exit button)
+            </summary>
+            
+        </member>
+        <member name="M:CommandTab.Rotating_Form.WakeUp">
+            <summary>
+              WakeUp -> enable all controls
+            </summary>
+            
+        </member>
+        <member name="M:CommandTab.Rotating_Form.MakeRequest">
+             <summary>
+               A private helper method to make a request
+               and put the dialog to sleep at the same time.
+             </summary>
+             <remarks>
+               It is expected that the process which executes the request 
+               (the Idling helper in this particular case) will also
+               wake the dialog up after finishing the execution.
+             </remarks>
+            
+        </member>
+        <member name="M:CommandTab.Rotating_Form.btnOK_Click(System.Object,System.EventArgs)">
+            <summary>
+            OK Button Click Event
+            </summary>
+            <param name="sender">Sender Objecet</param>
+            <param name="e">Event which will happen when button clicked</param>
+        </member>
+        <member name="M:CommandTab.Rotating_Form.btnClose_Click(System.Object,System.EventArgs)">
+            <summary>
+            Close Button Click Event
+            </summary>
+            <param name="sender">Sender Object</param>
+            <param name="e">Event which will happen when button clicked</param>
+        </member>
+        <member name="F:CommandTab.Rotating_Form.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CommandTab.Rotating_Form.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:CommandTab.Rotating_Form.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CommandTab.CreateStructuralConnectionCommand">
+            <summary>
+            Create beam between selected columns
+            </summary>
+        </member>
+        <member name="M:CommandTab.CreateStructuralConnectionCommand.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.CreateStructuralConnectionCommand.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.CreateStructuralConnectionEvent">
+            <summary>
+            Create Beam Between Columns External Event Handler
+            </summary>
+        </member>
+        <member name="M:CommandTab.CreateStructuralConnectionEvent.Execute(Autodesk.Revit.UI.UIApplication)">
+            <summary>
+              The top method of the event handler.
+            </summary>
+            <remarks>
+              This is called by Revit after the corresponding
+              external event was raised (by the modeless form)
+              and Revit reached the time at which it could call
+              the event's handler (i.e. this object)
+            </remarks>
+            <param name="app">Revit User Interface Application</param>
+        </member>
+        <member name="M:CommandTab.CreateStructuralConnectionEvent.GetName">
+            <summary>
+              A method to identify this External Event Handler
+            </summary>
+        </member>
+        <member name="T:CommandTab.StructuralConnectionSelector">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CommandTab.StructuralConnectionSelector.#ctor(Autodesk.Revit.UI.ExternalEvent,CommandTab.CreateStructuralConnectionEvent,Autodesk.Revit.DB.Document)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CommandTab.StructuralConnectionSelector.OnFormClosed(System.Windows.Forms.FormClosedEventArgs)">
+            <summary>
+            Form closed event handler
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:CommandTab.StructuralConnectionSelector.EnableCommands(System.Boolean)">
+             <summary>
+               Control enabler / disabler 
+             </summary>
+            
+        </member>
+        <member name="M:CommandTab.StructuralConnectionSelector.DozeOff">
+            <summary>
+              DozeOff -> disable all controls (but the Exit button)
+            </summary>
+            
+        </member>
+        <member name="M:CommandTab.StructuralConnectionSelector.WakeUp">
+            <summary>
+              WakeUp -> enable all controls
+            </summary>
+            
+        </member>
+        <member name="F:CommandTab.StructuralConnectionSelector.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CommandTab.StructuralConnectionSelector.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:CommandTab.StructuralConnectionSelector.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CommandTab.SteelConnectionOptions">
+            <summary>
+            Steel-Structural Connection Option Class
+            </summary>
+        </member>
+        <member name="M:CommandTab.SteelConnectionOptions.CreateDetailedStructuralConnection(Autodesk.Revit.UI.UIDocument)">
+            <summary>
+            Create detailed structural connection.
+            </summary>
+            <param name="uidoc">The active document.</param>
+            <returns>Returns the status of the operation.</returns>
+        </member>
+        <member name="M:CommandTab.SteelConnectionOptions.ChangeDetailedStructuralConnection(Autodesk.Revit.UI.UIDocument)">
+            <summary>
+            Change detailed structural connection.
+            </summary>
+            <param name="uidoc">The active document.</param>
+            <returns>Returns the status of the operation.</returns>
+        </member>
+        <member name="M:CommandTab.SteelConnectionOptions.MatchPropertiesDetailedStructuralConnection(Autodesk.Revit.UI.UIDocument)">
+            <summary>
+            Match properties for detailed structural connections.
+            </summary>
+            <param name="uidoc">The active document.</param>
+            <returns>Returns the status of the operation.</returns>
+        </member>
+        <member name="M:CommandTab.SteelConnectionOptions.CopyDetailedStructuralConnection(Autodesk.Revit.UI.UIDocument)">
+            <summary>
+            Copy detailed structural connection.
+            </summary>
+            <param name="uidoc">The active document.</param>
+            <returns>Returns the status of the operation.</returns>
+        </member>
+        <member name="M:CommandTab.SteelConnectionOptions.ResetDetailedStructuralConnection(Autodesk.Revit.UI.UIDocument)">
+            <summary>
+            Reset detailed structural connection type to generic.
+            </summary>
+            <param name="activeDoc">The active document.</param>
+            <returns>Returns the status of the operation.</returns>
+        </member>
+        <member name="M:CommandTab.SteelConnectionOptions.GetSchema(Autodesk.Revit.DB.Document,Autodesk.Revit.DB.Structure.StructuralConnectionHandler)">
+            <summary>
+            Get the Extensible storage schema
+            </summary>
+        </member>
+        <member name="M:CommandTab.SteelConnectionOptions.GetConnectionHandlerTypeGuid(Autodesk.Revit.DB.Structure.StructuralConnectionHandler,Autodesk.Revit.DB.Document)">
+            <summary>
+            Get the unique identifier of the structural steel connection type
+            </summary>
+            <param name="conn">structural connection</param>
+            <param name="doc">current document</param>
+            <returns>returns the unique identifier of the input connection type</returns>
+        </member>
+        <member name="T:CommandTab.TagWallLayers">
+            <summary>
+            Command code to be executed when button clicked
+            </summary>
+            <seealso cref="T:Autodesk.Revit.UI.IExternalCommand" />
+        </member>
+        <member name="M:CommandTab.TagWallLayers.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Tag wall layers by creating text note element on user 
+            specified point and populate it with layer information
+            </summary>
+            <param name="commandData"></param>
+            <param name="message"></param>
+            <param name="elements"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CommandTab.TagWallLayers.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CommandTab.TagWallLayers.FeetTomm(System.Double)">
+            <summary>
+            Convert feet to mm
+            </summary>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.Sample">
+            <summary>
+            Sample Class
+            </summary>
+        </member>
+        <member name="M:CommandTab.Sample.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.Sample.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.SteelElementProperty">
+            <summary>
+            Steel Element Set Parameter Class
+            </summary>
+        </member>
+        <member name="M:CommandTab.SteelElementProperty.Execute(Autodesk.Revit.UI.ExternalCommandData,System.String@,Autodesk.Revit.DB.ElementSet)">
+            <summary>
+            Implement this method as an external command for Revit.
+            </summary>
+            <param name="commandData">An object that is passed to the external application 
+            which contains data related to the command, 
+            such as the application object and active view.</param>
+            <param name="message">A message that can be set by the external application 
+            which will be displayed if a failure or cancellation is returned by 
+            the external command.</param>
+            <param name="elements">A set of elements to which the external application 
+            can add elements that are to be highlighted in case of failure or cancellation.</param>
+            <returns>Return the status of the external command. 
+            A result of Succeeded means that the API external method functioned as expected. 
+            Cancelled can be used to signify that the user cancelled the external operation 
+            at some point. Failure should be returned if the application is unable to proceed with 
+            the operation.</returns>
+        </member>
+        <member name="M:CommandTab.SteelElementProperty.GetPath">
+            <summary>
+            Gets the full namespace path to this command
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.SteelUtilities">
+            <summary>
+            Helper Methods for Steel Connection
+            </summary>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.GetFilerObject(Autodesk.Revit.DB.Document,Autodesk.Revit.DB.Reference)">
+            <summary>
+            Function that returns the AS Filer Object from the selected reference object
+            </summary>
+            <param name="doc">Active Revit Document</param>
+            <param name="eRef">Selected element</param>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.GetStructuralConnectionHandlers(Autodesk.Revit.DB.Document)">
+            <summary>
+            Collect all structural connection handlers in the document
+            </summary>
+            <param name="doc">Active Revit Document</param>
+            <returns>Collection of structural connection handlers in the document</returns>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.GetSteelProxyElements(Autodesk.Revit.DB.Document,Autodesk.Revit.DB.Steel.GeomObjectType)">
+            <summary>
+            Gets the steel proxy elements given to the GeomObjectType input
+            </summary>
+            <param name="doc">Active Revit Document</param>
+            <param name="objectType">Geometry Object Type (Proxy Element)</param>
+            <returns>List of proxy element given to the input</returns>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.GetSubConnection(Autodesk.Revit.DB.Document,CommandTab.SteelConnectionsType)">
+            <summary>
+            Gets the sub elements to given input
+            </summary>
+            <param name="doc">Active Revit Document</param>
+            <param name="connectionsType">Steel Connection Type Selecter</param>
+            <returns>Plate elements as sub element from connection</returns>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.SetVolumeMassProxy(Autodesk.Revit.DB.Document,Autodesk.Revit.DB.Steel.SteelProxyElement)">
+            <summary>
+            Sets the value of mass and volume of proxy element
+            </summary>
+            <param name="doc">Active Revit Document</param>
+            <param name="proxyElement">Input Proxy Element</param>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.SetVolumeMassSub(Autodesk.Revit.DB.Document,System.Collections.Generic.List{Autodesk.Revit.DB.Subelement})">
+            <summary>
+            Sets the volume of given plate connection class
+            </summary>
+            <param name="doc">Active Revit Document</param>
+            <param name="subelements">List of sub elements in the current Revit Document</param>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.GetMaterialDensity(Autodesk.Revit.DB.Document,Autodesk.Revit.DB.ElementId)">
+            <summary>
+            Gets the material density of given material for calculate the mass of object
+            Mass = Volume * Density
+            </summary>
+            <param name="doc">Active Revit Document</param>
+            <param name="materialId">Given Material ID</param>
+            <returns>Density of input material</returns>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.structuralConnectionTypeArray(Autodesk.Revit.DB.Document,System.Collections.ArrayList)">
+            <summary>
+            Add structural connection types to the array list for initalize to the form
+            </summary>
+            <param name="doc">Active Revit UI Document</param>
+            <param name="connectionArray">Structural Connection Type Storage Array</param>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.FeettoMM(System.Double)">
+            <summary>
+            Convert Revit default imperial to the metric milimeter
+            </summary>
+            <param name="number">Input number which wants to convert to metric</param>
+            <returns>MM type number</returns>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.GetElementParameterInformation(Autodesk.Revit.DB.Document,Autodesk.Revit.DB.Element)">
+            <summary>
+            Gets all parameter information and show it to the user.
+            All parameter's type set as its storage type
+            </summary>
+            <param name="document">Active Revit Document</param>
+            <param name="element">Parameters owner element</param>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.GetParameterInformation(Autodesk.Revit.DB.Parameter,Autodesk.Revit.DB.Document)">
+            <summary>
+            Gets information from parameter.
+            All parameter's type set as its storage type.
+            </summary>
+            <param name="para">Input parameter</param>
+            <param name="document"></param>
+            <returns>Information of element's parameter</returns>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.SelectConnection(Autodesk.Revit.UI.UIDocument)">
+            <summary>
+            Static method to select structural connections.
+            </summary>
+            <returns>Returns the id of the connection.</returns>
+        </member>
+        <member name="M:CommandTab.SteelUtilities.SelectConnectionElements(Autodesk.Revit.UI.UIDocument)">
+            <summary>
+            Static method o select valid input element for the structural connection.
+            </summary>
+            <param name="document"> Current document. </param>
+            <returns>Returns a list of element ids.</returns>
+        </member>
+        <member name="T:CommandTab.LogicalSelectionFilter">
+            <summary>
+            Selection Filter as given input
+            </summary>
+        </member>
+        <member name="M:CommandTab.LogicalSelectionFilter.#ctor(Autodesk.Revit.DB.LogicalOrFilter)">
+            <summary>
+            Initialize the filter with the accepted element types.
+            </summary>
+            <param name="elemTypesAllowed">Logical filter containing accepted element types.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CommandTab.LogicalSelectionFilter.AllowElement(Autodesk.Revit.DB.Element)">
+            <summary>
+            Allows an element to be selected
+            </summary>
+            <param name="element">A candidate element in the selection operation.</param>
+            <returns>Return true to allow the user to select this candidate element.</returns>
+        </member>
+        <member name="M:CommandTab.LogicalSelectionFilter.AllowReference(Autodesk.Revit.DB.Reference,Autodesk.Revit.DB.XYZ)">
+            <summary>
+            Allows a reference to be selected.
+            </summary>
+            <param name="refer"> A candidate reference in the selection operation.</param>
+            <param name="point">The 3D position of the mouse on the candidate reference.</param>
+            <returns>Return true to allow the user to select this candidate reference.</returns>
+        </member>
+        <member name="T:CommandTab.ConnectionTypeMap">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CommandTab.ConnectionTypeMap.#ctor">
+            <summary>
+            constructor without parameter is forbidden
+            </summary>
+        </member>
+        <member name="M:CommandTab.ConnectionTypeMap.#ctor(Autodesk.Revit.DB.Structure.StructuralConnectionHandlerType)">
+            <summary>
+            Main Class Constructor
+            </summary>
+        </member>
+        <member name="P:CommandTab.ConnectionTypeMap.ConnectionName">
+            <summary>
+            Display member of class
+            </summary>
+        </member>
+        <member name="P:CommandTab.ConnectionTypeMap.ConnectionType">
+            <summary>
+            ElementType property of class
+            </summary>
+        </member>
+        <member name="T:CommandTab.SteelConnectionsType">
+            <summary>
+            Steel Connection Type Selection Class
+            </summary>
+        </member>
+        <member name="F:CommandTab.SteelConnectionsType.Plate">
+            <summary>
+            Steel Plate
+            </summary>
+        </member>
+        <member name="F:CommandTab.SteelConnectionsType.Bolts">
+            <summary>
+            Steel Connection Bolt Pattern Connections
+            </summary>
+        </member>
+        <member name="F:CommandTab.SteelConnectionsType.Anchors">
+            <summary>
+            Steel Connection Anchor Pattern Connections
+            </summary>
+        </member>
+        <member name="F:CommandTab.SteelConnectionsType.Framings">
+            <summary>
+            Steel Framing Elements
+            </summary>
+        </member>
+        <member name="F:CommandTab.SteelConnectionsType.Columns">
+            <summary>
+            Steel Structural Column
+            </summary>
+        </member>
+        <member name="F:CommandTab.SteelConnectionsType.Holes">
+            <summary>
+            Holes in the plate, framing elements and structural columns
+            </summary>
+        </member>
+        <member name="F:CommandTab.SteelConnectionsType.ShearStuds">
+            <summary>
+            Steel Shear Strud Connections
+            </summary>
+        </member>
+        <member name="F:CommandTab.SteelConnectionsType.Welds">
+            <summary>
+            Weld Connection points
+            </summary>
+        </member>
+        <member name="F:CommandTab.SteelConnectionsType.Modifiers">
+            <summary>
+            Structural Connection Modifiers
+            </summary>
+        </member>
+        <member name="T:CommandTab.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:CommandTab.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:CommandTab.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="T:CommandTab.Button">
+            <summary>
+            Revit push button methods
+            </summary>
+        </member>
+        <member name="M:CommandTab.Button.Create(CommandTab.PushButtonDataModel)">
+            <summary>
+            Creates the push button data based on  data provided 
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CommandTab.Button.CreateButtonData(CommandTab.PushButtonDataModel)">
+            <summary>
+            Create Button Data for split button creation
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CommandTab.PushButtonDataModel">
+            <summary>
+            Represent revit push button data model
+            </summary>
+        </member>
+        <member name="P:CommandTab.PushButtonDataModel.Label">
+            <summary>
+            Gets or sets the label of button
+            </summary>
+        </member>
+        <member name="P:CommandTab.PushButtonDataModel.Panel">
+            <summary>
+            Gets or sets the panel on which button is hosted
+            </summary>
+        </member>
+        <member name="P:CommandTab.PushButtonDataModel.CommandNamespacePath">
+            <summary>
+            Gets or sets the command namespace path
+            </summary>
+        </member>
+        <member name="P:CommandTab.PushButtonDataModel.Tooltip">
+            <summary>
+            Gets or sets tooltip
+            </summary>
+        </member>
+        <member name="P:CommandTab.PushButtonDataModel.IconImageName">
+            <summary>
+            Gets or sets the icon image 
+            </summary>
+        </member>
+        <member name="P:CommandTab.PushButtonDataModel.TooltipImageName">
+            <summary>
+            Gets or sets the Tooltip image 
+            </summary>
+        </member>
+        <member name="P:CommandTab.PushButtonDataModel.GetAssemblyLocation">
+            <summary>
+            Gets the core assembly location via "Assembly.GetExecutingAssembly().Location;"
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.tooltip_3DRotate">
+            <summary>
+            3D Rotate tooltip image
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.Icon_B">
+            <summary>
+            Orange B Icon
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.Icon_S">
+            <summary>
+            Orange S with Black background Icon
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.Icon_Rotate">
+            <summary>
+            Rotate Icon
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.Icon_Beam">
+            <summary>
+            Beam Icon
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.Icon_DoorOpening">
+            <summary>
+            Door opening Icon
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.Icon_Override">
+            <summary>
+            Override icon
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.Icon_PlateConnection">
+            <summary>
+            Plate connection icon
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.Icon_Grid">
+            <summary>
+            Grid Icon
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.tooltip_Grid">
+            <summary>
+            Grid tooltip image
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.tooltip_Beam">
+            <summary>
+            Beam tooltip image
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.tooltip_DoorOpening">
+            <summary>
+            Door opening tooltip image
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.tooltip_Override">
+            <summary>
+            Override label tooltip image
+            </summary>
+        </member>
+        <member name="F:CommandTab.PushButtonDataModel.tooltip_PlateConnection">
+            <summary>
+            Beam and plate connection tooltip image
+            </summary>
+        </member>
+        <member name="M:CommandTab.PushButtonDataModel.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="T:CommandTab.ResourceImage">
+            <summary>
+            Gets the  image from ResourceImage based on user provided
+             file name with extension. Helper methods.
+            </summary>
+        </member>
+        <member name="M:CommandTab.ResourceImage.GetIcon(System.String)">
+            <summary>
+            Gets the icon image from resource assembly
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

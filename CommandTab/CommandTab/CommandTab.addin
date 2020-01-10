@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>Application CommandTab</Name>
+    <Assembly>CommandTab.dll</Assembly>
+    <AddInId>
+      "AC9F16FC-D714-4FB6-868B-195B8F8DF29A"
+    </AddInId>
+    <FullClassName>CommandTab.App</FullClassName>
+    <ClientId>c98740c2-802a-41d1-8b86-87001be2c12f</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
