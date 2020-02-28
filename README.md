@@ -7,13 +7,18 @@ DLLs in the dependecies folder are Revit and Advance Steel 2020 version files.
 
 ## All Commands
 ![alt text](CommandTab/Images/Main_Menu.png "Main Ribbon")
+======
 ### Tag Wall Layers Button
 ![alt text](CommandTab/Images/Tag_Wall_Layers.png "Tag Wall Layer")
+======
 ### Auto Cope Split Buttons
 ![alt text](CommandTab/Images/Cope.png "Steel Element Auto Cope")
+======
 ### Create Structural Connection Button
 ![alt text](CommandTab/Images/Create_Connection.png "Create Steel Connection")
+======
 ### Door Direction Control
 ![alt text](CommandTab/Images/Door_Control.png "Door Control")
+======
 ### Create and Modify Levels
 ![alt text](CommandTab/Images/Create_Level.png "Create Level")
